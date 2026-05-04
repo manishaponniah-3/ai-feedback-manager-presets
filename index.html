@@ -3287,6 +3287,21 @@
                 </div>
 
                 <div id="addColumnTab" class="column-tab-content">
+                    <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e5e5e7;">
+                        <label class="form-label" style="margin-bottom: 12px;">Quick Add Presets</label>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <button class="preset-column-btn" data-preset="completion-date" style="padding: 10px 14px; background: #f5f5f7; border: 1px solid #d1d1d6; border-radius: 6px; text-align: left; font-size: 14px; color: #1a1d24; cursor: pointer; transition: all 0.2s;">
+                                Expected Completion Date
+                            </button>
+                            <button class="preset-column-btn" data-preset="owner" style="padding: 10px 14px; background: #f5f5f7; border: 1px solid #d1d1d6; border-radius: 6px; text-align: left; font-size: 14px; color: #1a1d24; cursor: pointer; transition: all 0.2s;">
+                                Owner/Assignee
+                            </button>
+                            <button class="preset-column-btn" data-preset="resolution" style="padding: 10px 14px; background: #f5f5f7; border: 1px solid #d1d1d6; border-radius: 6px; text-align: left; font-size: 14px; color: #1a1d24; cursor: pointer; transition: all 0.2s;">
+                                Issue Resolution
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="form-label">Column Name *</label>
                         <input type="text" class="form-input" placeholder="e.g., Priority, Severity, Team" id="columnNameInput">
@@ -3430,6 +3445,96 @@
                     });
                 });
             }
+
+            // Add preset button handlers
+            const presetButtons = document.querySelectorAll('.preset-column-btn');
+            presetButtons.forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.background = '#e8e8ea';
+                    this.style.borderColor = '#a0a0a8';
+                });
+                btn.addEventListener('mouseleave', function() {
+                    this.style.background = '#f5f5f7';
+                    this.style.borderColor = '#d1d1d6';
+                });
+
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const preset = this.getAttribute('data-preset');
+
+                    let columnConfig = {};
+                    if (preset === 'completion-date') {
+                        columnConfig = {
+                            name: 'Expected Completion Date',
+                            type: 'date',
+                            required: false,
+                            allowSort: true,
+                            defaultValue: ''
+                        };
+                    } else if (preset === 'owner') {
+                        columnConfig = {
+                            name: 'Owner/Assignee',
+                            type: 'person',
+                            required: false,
+                            allowSort: false,
+                            defaultValue: ''
+                        };
+                    } else if (preset === 'resolution') {
+                        columnConfig = {
+                            name: 'Issue Resolution',
+                            type: 'text',
+                            required: false,
+                            allowSort: false,
+                            defaultValue: ''
+                        };
+                    }
+
+                    // Add the column directly by simulating the add column process
+                    const thead = document.querySelector('thead tr');
+                    const lastTh = thead.querySelector('th:last-child');
+
+                    const newTh = document.createElement('th');
+                    newTh.className = 'custom-column-header';
+                    newTh.style.width = '150px';
+
+                    newTh.innerHTML = `
+                        <span style="display: inline-flex; align-items: center; gap: 4px;">
+                            <span>${columnConfig.name}</span>
+                            <span class="column-edit-icon">⚙</span>
+                        </span>
+                    `;
+
+                    newTh.setAttribute('data-column-id', columnConfig.name);
+                    newTh.setAttribute('data-column-name', columnConfig.name);
+                    newTh.setAttribute('data-column-type', columnConfig.type);
+                    newTh.setAttribute('data-default-value', columnConfig.defaultValue);
+                    newTh.setAttribute('data-is-counter', false);
+                    newTh.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        openColumnEditView(this);
+                    });
+
+                    thead.insertBefore(newTh, lastTh);
+
+                    // Add cells to all rows
+                    const rows = document.querySelectorAll('tbody tr');
+                    rows.forEach((row, index) => {
+                        const newTd = document.createElement('td');
+                        newTd.innerHTML = '';
+                        newTd.style.cursor = 'pointer';
+                        newTd.setAttribute('data-column-type', columnConfig.type);
+                        newTd.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            editCustomCell(this, columnConfig.type);
+                        });
+                        const lastTd = row.querySelector('td:last-child');
+                        row.insertBefore(newTd, lastTd);
+                    });
+
+                    closeRail();
+                    updateAddColumnButton();
+                });
+            });
 
             // Re-attach event listeners for column type dropdown
             const columnTypeSelect = document.getElementById('columnTypeSelect');
