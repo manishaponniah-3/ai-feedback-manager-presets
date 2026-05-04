@@ -9,11 +9,9 @@ Visit: https://manishaponniah-3.github.io/ai-feedback-manager-presets
 ## Features
 
 - **Status Management**: Track feedback through different states (Created, In Progress, Testing, Verifying, Closed)
-- **Preset Column Templates**: Quick-add common columns with one click:
-  - 📅 Expected Completion Date (Date field)
-  - 👤 Owner/Assignee (Person field)
-  - ✅ Issue Resolution (Text field for final outcome description)
-- **Custom Columns**: Add up to 10 custom columns with different types (text, number, date, select, person, checkbox)
+- **Column Management**: Add and remove custom columns with tabbed interface
+  - Add up to 10 custom columns with different types (text, number, date, select, person, checkbox)
+  - Remove existing custom columns
 - **Auto-increment Counters**: Number columns can auto-increment sequentially
 - **Commenting System**: Add comments and replies to feedback items
 - **Filtering & Search**: Filter by status, agent, date range, or search by keyword
@@ -22,7 +20,7 @@ Visit: https://manishaponniah-3.github.io/ai-feedback-manager-presets
 
 ## Differences from Base Version
 
-This version includes preset column templates in the "Add Custom Column" panel, allowing users to quickly add commonly-used columns with predefined configurations instead of manually setting up each field.
+This version includes enhanced column management with the ability to both add and remove custom columns through a tabbed interface in the column customizer panel.
 
 ## Usage
 
